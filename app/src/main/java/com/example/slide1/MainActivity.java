@@ -30,10 +30,14 @@ public class MainActivity extends AppCompatActivity
             sb.append(str);
         }
         System.out.println(sb);
-        //Multithreading
-        ThreadSubclass();
-        ThreadRunnable();
-        AnonymousRunnable();
+        //Multithreading: Types Of Thread Implementation
+//        ThreadSubclass();
+//        ThreadRunnable();
+//        AnonymousRunnable();
+//        LambdaRunnable();
+        //Multithreading: Race Condition
+        RaceCondition();
+        SynchronizedThread();
     }
 
     void ThreadSubclass()
@@ -103,5 +107,41 @@ public class MainActivity extends AppCompatActivity
                 " pid: " + android.os.Process.myPid()+
                 " tid: " + android.os.Process.myTid()+
                 " id: " + Thread.currentThread().getId());
+    }
+
+    void RaceCondition()
+    {
+        Counter c = new Counter();
+        Thread thread1 = new Thread(() -> c.doWork());
+        Thread thread2 = new Thread(() -> c.doWork());
+        thread1.start();
+        thread2.start();
+        Log.i(TAG, "RaceCondition ]] >> " + " count: " + c.count);
+    }
+
+    void SynchronizedThread()
+    {
+        Counter c = new Counter();
+        Thread thread1 = new Thread(() -> c.safeDoWork());
+        Thread thread2 = new Thread(() -> c.safeDoWork());
+        thread1.start();
+        thread2.start();
+        try
+        {
+            thread1.join();
+        }
+        catch ( InterruptedException e )
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            thread2.join();
+        }
+        catch ( InterruptedException e )
+        {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "SynchronizedThread ]] >> " + " count: " + c.count);
     }
 }
