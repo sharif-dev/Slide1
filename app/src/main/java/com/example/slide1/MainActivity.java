@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends AppCompatActivity
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity
         ThreadLocalExampleMethod();
         //Multithreading: Wait, Notify & NotifyAll
         WaitNotifyTest();
+        //Multithreading: BlockingQueue
+        ArrayBlockingQueueExample();
     }
 
     void ThreadSubclass()
@@ -201,5 +205,27 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         Log.i(TAG, "WaitNotifyTest ]] >> end");
+    }
+
+    void ArrayBlockingQueueExample()
+    {
+        Log.i(TAG, "ArrayBlockingQueueExample ]] >> started");
+
+        BlockingQueue queue = new ArrayBlockingQueue(1024);
+
+        Producer producer = new Producer(queue);
+        Consumer consumer = new Consumer(queue);
+
+        new Thread(producer).start();
+        new Thread(consumer).start();
+        try
+        {
+            Thread.sleep(4000);
+        }
+        catch ( InterruptedException e )
+        {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "ArrayBlockingQueueExample ]] >> ended");
     }
 }
