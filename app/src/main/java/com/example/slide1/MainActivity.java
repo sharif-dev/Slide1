@@ -18,5 +18,16 @@ public class MainActivity extends AppCompatActivity
         //Factory Methods Example
         MovieFactoryMethods daredevil = MovieFactoryMethods.create("Daredevil");
         MovieFactoryMethods inception = MovieFactoryMethods.create("Inception");
+        //String Builder Example
+        String[] list = new String[]{"A", "C", "D", "F"};
+        StringBuilder sb = new StringBuilder();
+        String prefix = "";
+        for( String str : list)
+        {
+            sb.append(prefix);
+            prefix = ",";
+            sb.append(str);
+        }
+        System.out.println(sb);
     }
 }
