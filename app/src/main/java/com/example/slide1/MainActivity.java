@@ -31,13 +31,15 @@ public class MainActivity extends AppCompatActivity
         }
         System.out.println(sb);
         //Multithreading: Types Of Thread Implementation
-//        ThreadSubclass();
-//        ThreadRunnable();
-//        AnonymousRunnable();
-//        LambdaRunnable();
+        ThreadSubclass();
+        ThreadRunnable();
+        AnonymousRunnable();
+        LambdaRunnable();
         //Multithreading: Race Condition
         RaceCondition();
         SynchronizedThread();
+        //Multithreading: ThreadLocal
+        ThreadLocalExampleMethod();
     }
 
     void ThreadSubclass()
@@ -143,5 +145,31 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         Log.i(TAG, "SynchronizedThread ]] >> " + " count: " + c.count);
+    }
+
+    void ThreadLocalExampleMethod()
+    {
+        ThreadLocalExample sharedInstance = new ThreadLocalExample();
+        Thread thread1 = new Thread(() -> sharedInstance.doWork());
+        Thread thread2 = new Thread(() -> sharedInstance.doWork());
+        thread1.start();
+        thread2.start();
+        try
+        {
+            thread1.join();
+        }
+        catch ( InterruptedException e )
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            thread2.join();
+        }
+        catch ( InterruptedException e )
+        {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "ThreadLocalExampleMethod ]] >> " + sharedInstance.getValue());
     }
 }
