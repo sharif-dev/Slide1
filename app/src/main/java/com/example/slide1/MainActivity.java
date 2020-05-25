@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.util.concurrent.CountDownLatch;
+
 public class MainActivity extends AppCompatActivity
 {
     protected static final String TAG = "prj1-thread";
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity
         SynchronizedThread();
         //Multithreading: ThreadLocal
         ThreadLocalExampleMethod();
+        //Multithreading: Wait, Notify & NotifyAll
+        WaitNotifyTest();
     }
 
     void ThreadSubclass()
@@ -171,5 +175,31 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         Log.i(TAG, "ThreadLocalExampleMethod ]] >> " + sharedInstance.getValue());
+    }
+
+    void WaitNotifyTest()
+    {
+        final CountDownLatch latch = new CountDownLatch(2);
+
+        Message message = new Message("process it");
+
+        Waiter waiter1 = new Waiter(message, latch);
+        new Thread(waiter1, "waiter1").start();
+
+        Waiter waiter2 = new Waiter(message, latch);
+        new Thread(waiter2, "waiter2").start();
+
+        Notifier notifier = new Notifier(message, latch);
+        new Thread(notifier, "notifier1").start();
+
+        try
+        {
+            latch.await();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "WaitNotifyTest ]] >> end");
     }
 }
